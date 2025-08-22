@@ -1,5 +1,5 @@
 import { and } from "drizzle-orm";
-import { db } from "../db";
+import { db } from "../config";
 
 export async function checkDbConnection() {
   try {

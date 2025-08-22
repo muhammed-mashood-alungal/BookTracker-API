@@ -1,11 +1,11 @@
 import { eq, ilike, InferInsertModel, InferSelectModel } from "drizzle-orm";
-import { db } from "../db";
 import { books } from "../models";
-import { IGetAllQuery } from "../types/common.types";
+import { IGetAllQuery } from "../types";
 import { findOneBy } from "../utils";
 import { HttpError } from "../exceptions";
 import { ERROR_RESPONSE } from "../constants";
 import { StatusCodes } from "http-status-codes";
+import { db } from "../config";
 
 export class BookService {
   async createBook(bookDetails: InferInsertModel<typeof books>) {
@@ -53,8 +53,15 @@ export class BookService {
 
   async updateBook(
     bookId: number,
-    newBookData: Partial<InferSelectModel<typeof books>>
+    newBookData: Partial<InferSelectModel<typeof books>> = {}
   ) {
+    if (Object.keys(newBookData).length === 0) {
+      throw new HttpError(
+        ERROR_RESPONSE.NO_DATA_TO_UPDATE,
+        StatusCodes.BAD_REQUEST
+      );
+    }
+
     const [updatedBook] = await db
       .update(books)
       .set(newBookData)

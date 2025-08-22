@@ -2,10 +2,10 @@ import Elysia, { t } from "elysia";
 import { BookService, NotesService } from "../services";
 import { BookCreateSchema, BookUpdateSchema } from "../schema";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
-import { ListQuerySchema } from "../schema/common.schema";
-import { successResponse } from "../utils/response.util";
-import { bookIdParams } from "../schema/params.schema";
-import { NoteCreateSchema } from "../schema/note.schema";
+import { ListQuerySchema } from "../schema";
+import { successResponse } from "../utils";
+import { bookIdParams } from "../schema";
+import { NoteCreateSchema } from "../schema";
 
 const bookService = new BookService();
 const noteService = new NotesService();

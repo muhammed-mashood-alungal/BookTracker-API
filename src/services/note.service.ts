@@ -1,10 +1,10 @@
 import { eq, InferInsertModel } from "drizzle-orm";
 import { books, notes } from "../models";
-import { db } from "../db";
 import { findOneBy } from "../utils";
 import { HttpError } from "../exceptions";
 import { ERROR_RESPONSE } from "../constants";
 import { StatusCodes } from "http-status-codes";
+import { db } from "../config";
 
 export class NotesService {
   async createNoteforBook(

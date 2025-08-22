@@ -1,2 +1,1 @@
-export * from "./book.typs";
-export * from "./note.types";
+export * from "./common.types";
