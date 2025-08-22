@@ -2,7 +2,6 @@ import {
   pgTable,
   timestamp,
   text,
-  char,
   serial,
   integer,
 } from "drizzle-orm/pg-core";

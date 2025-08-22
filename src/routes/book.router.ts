@@ -1,12 +1,14 @@
 import Elysia, { t } from "elysia";
-import { BookService } from "../services";
+import { BookService, NotesService } from "../services";
 import { BookCreateSchema, BookUpdateSchema } from "../schema";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import { ListQuerySchema } from "../schema/common.schema";
-import { errorResponse, successResponse } from "../utils/response.util";
+import { successResponse } from "../utils/response.util";
 import { bookIdParams } from "../schema/params.schema";
+import { NoteCreateSchema } from "../schema/note.schema";
 
 const bookService = new BookService();
+const noteService = new NotesService();
 
 export const bookApp = new Elysia({ prefix: "/books" })
 
@@ -43,11 +45,21 @@ export const bookApp = new Elysia({ prefix: "/books" })
     return successResponse(StatusCodes.NO_CONTENT, ReasonPhrases.OK);
   })
 
+  .get("/:bookId/notes", async ({ params }) => {
+    const { bookId } = bookIdParams.parse(params);
+    const notes = await noteService.getNotesOfBooks(bookId);
+    return successResponse(StatusCodes.OK, ReasonPhrases.OK, { notes });
+  })
+
+  .post("/:bookId/notes", async ({ params, body }) => {
+    const { bookId } = bookIdParams.parse(params);
+    const noteDetails = NoteCreateSchema.parse(body);
+    const newNote = await noteService.createNoteforBook(bookId, noteDetails);
+    return successResponse(StatusCodes.OK, ReasonPhrases.OK, { newNote });
+  })
+
   .get("/:bookId", async ({ params }) => {
     const { bookId } = bookIdParams.parse(params);
     const book = await bookService.getBook(bookId);
-    if (!book) {
-      return errorResponse(StatusCodes.NOT_FOUND, ReasonPhrases.NOT_FOUND);
-    }
     return successResponse(StatusCodes.OK, ReasonPhrases.OK, { book });
   });

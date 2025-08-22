@@ -8,12 +8,16 @@ import { ReasonPhrases, StatusCodes } from "http-status-codes";
 const app = new Elysia()
   .error("HTTP_ERROR", HttpError)
   .onError(({ code, error, set }) => {
+    console.log(error)
     if (error instanceof HttpError) {
       set.status = error.status;
-      errorResponse(error.status, error.message);
+      return errorResponse(error.status, error.message);
     }
     set.status = StatusCodes.INTERNAL_SERVER_ERROR;
-    errorResponse(StatusCodes.INTERNAL_SERVER_ERROR, ReasonPhrases.INTERNAL_SERVER_ERROR);
+    return errorResponse(
+      StatusCodes.INTERNAL_SERVER_ERROR,
+      ReasonPhrases.INTERNAL_SERVER_ERROR
+    );
   })
   .get("/", () => "Hello Elysia")
   .use(bookApp)

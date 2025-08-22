@@ -1,13 +1,11 @@
-import {
-  eq,
-  ilike,
-  InferInsertModel,
-  InferSelectModel,
-} from "drizzle-orm";
+import { eq, ilike, InferInsertModel, InferSelectModel } from "drizzle-orm";
 import { db } from "../db";
 import { books } from "../models";
 import { IGetAllQuery } from "../types/common.types";
 import { findOneBy } from "../utils";
+import { HttpError } from "../exceptions";
+import { ERROR_RESPONSE } from "../constants";
+import { StatusCodes } from "http-status-codes";
 
 export class BookService {
   async createBook(bookDetails: InferInsertModel<typeof books>) {
@@ -16,7 +14,6 @@ export class BookService {
   }
 
   async getBooks({ limit, search, skip }: IGetAllQuery) {
-
     const searchTerm = search ? `%${search}%` : undefined;
 
     let query = db
@@ -43,27 +40,37 @@ export class BookService {
   }
 
   async getBook(bookId: number) {
-    return await findOneBy(books, [eq(books.id, bookId) , eq(books.isDeleted,false)]);
+    const book = await findOneBy(books, [
+      eq(books.id, bookId),
+      eq(books.isDeleted, false),
+    ]);
+    if (!book) {
+      throw new HttpError(ERROR_RESPONSE.BOOK_NOT_FOUND, StatusCodes.NOT_FOUND);
+    }
+    console.log(book);
+    return book;
   }
 
   async updateBook(
     bookId: number,
     newBookData: Partial<InferSelectModel<typeof books>>
   ) {
-    const [updatedBook] =  await db.update(books).set(newBookData).where(eq(books.id, bookId)).returning();
-    return updatedBook
+    const [updatedBook] = await db
+      .update(books)
+      .set(newBookData)
+      .where(eq(books.id, bookId))
+      .returning();
+    return updatedBook;
   }
 
   async deleteBook(bookId: number) {
-    await db
-      .update(books)
-      .set({ isDeleted: true })
-      .where(eq(books.id, bookId));
+    await db.update(books).set({ isDeleted: true }).where(eq(books.id, bookId));
   }
   async restoreBook(bookId: number) {
     await db
       .update(books)
       .set({ isDeleted: false })
-      .where(eq(books.id, bookId)).returning();
+      .where(eq(books.id, bookId))
+      .returning();
   }
 }

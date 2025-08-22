@@ -12,10 +12,11 @@ export async function checkDbConnection() {
 
 export const findOneBy = async <T>(
   table: any,
-  condition: any
+  condition: any,
+  select: any = {}
 ): Promise<T | null> => {
   const result = await db
-    .select()
+    .select(Object.keys(select).length ? select : undefined)
     .from(table)
     .where(and(...condition))
     .limit(1);
