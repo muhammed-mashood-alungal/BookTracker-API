@@ -1,3 +1,4 @@
+import { and } from "drizzle-orm";
 import { db } from "../config";
 
 export async function checkDbConnection() {
@@ -6,6 +7,18 @@ export async function checkDbConnection() {
     console.log("DB connection Ready");
   } catch (err) {
     console.error("DB connection failed", err);
-    // process.exit(1);
   }
 }
+
+export const findOneBy = async <T>(
+  table: any,
+  condition: any,
+  select: any = {}
+): Promise<T | null> => {
+  const result = await db
+    .select(Object.keys(select).length ? select : undefined)
+    .from(table)
+    .where(and(...condition))
+    .limit(1);
+  return result[0] || null;
+};
