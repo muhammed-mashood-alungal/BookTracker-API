@@ -1,20 +1,51 @@
 import Elysia, { t } from "elysia";
 import { BookService } from "../services";
-import { Book } from "../schema";
+import { BookCreateSchema, BookUpdateSchema } from "../schema";
+import { ReasonPhrases, StatusCodes } from "http-status-codes";
+import { ListQuerySchema } from "../schema/common.schema";
+import { errorResponse, successResponse } from "../utils/response.util";
 
 const bookService = new BookService();
 
 export const bookApp = new Elysia({ prefix: "/books" })
-  .get("/", () => {
-    return "ALL SET";
+  .get("/", async ({ query }) => {
+    const listQuery = ListQuerySchema.parse(query);
+    const books = await bookService.getBooks(listQuery);
+    return successResponse(StatusCodes.OK, ReasonPhrases.OK, { books });
   })
-  .post("/", async({ body }) => {
-    const bookDetails = Book.parse(body);
-    const newBook =  await bookService.addNewBook(bookDetails);
-    return newBook;
+
+  .post("/", async ({ body }) => {
+    const bookDetails = BookCreateSchema.parse(body);
+    const newBook = await bookService.createBook(bookDetails);
+    return successResponse(StatusCodes.CREATED, ReasonPhrases.CREATED, {
+      newBook,
+    });
   })
-  .put("/", ({ body }) => {
-    return "PUT";
+
+  .put("/:bookId", async ({ body, params }) => {
+    const bookDetails = BookUpdateSchema.parse(body);
+    const bookId = params.bookId;
+    const updatedBook = await bookService.updateBook(bookId, bookDetails);
+    return successResponse(StatusCodes.OK, ReasonPhrases.OK, { updatedBook });
   })
-  .delete("/", ({ body }) => {})
-  .get("/:bookId", ({ body }) => {});
+
+  .delete("/:bookId", async ({ params }) => {
+    const bookId = params.bookId;
+    await bookService.deleteBook(bookId);
+    return successResponse(StatusCodes.NO_CONTENT, ReasonPhrases.OK);
+  })
+
+  .patch("/:bookId/restore", async ({ params }) => {
+    const bookId = params.bookId;
+    await bookService.restoreBook(bookId);
+    return successResponse(StatusCodes.NO_CONTENT, ReasonPhrases.OK);
+  })
+
+  .get("/:bookId", async ({ params }) => {
+    const bookId = params.bookId;
+    const book = await bookService.getBook(bookId);
+    if (!book) {
+      return errorResponse(StatusCodes.NOT_FOUND,ReasonPhrases.NOT_FOUND);
+    }
+    return successResponse(StatusCodes.OK, ReasonPhrases.OK, { book });
+  });
