@@ -5,5 +5,4 @@ export interface IBook {
   status: "not_started" | "in_progress" | "finished";
   isDeleted: boolean;
   createdAt: Date;
-  updatedAt: Date;
 }
