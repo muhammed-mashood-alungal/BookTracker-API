@@ -4,7 +4,7 @@ import {
   pgEnum,
   timestamp,
   boolean,
-  uuid,
+  serial,
 } from "drizzle-orm/pg-core";
 
 export const bookStatusEnum = pgEnum("status", [
@@ -14,7 +14,7 @@ export const bookStatusEnum = pgEnum("status", [
 ]);
 
 export const books = pgTable("books", {
-  id: uuid("id").defaultRandom().primaryKey(),
+  id: serial("id").primaryKey(),
   title: varchar("title", { length: 50 }).notNull(),
   author: varchar("author", { length: 50 }).notNull(),
   status: bookStatusEnum("status").default("not_started"),

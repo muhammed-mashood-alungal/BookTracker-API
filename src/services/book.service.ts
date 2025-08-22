@@ -42,25 +42,25 @@ export class BookService {
     return allBooks;
   }
 
-  async getBook(bookId: string) {
+  async getBook(bookId: number) {
     return await findOneBy(books, [eq(books.id, bookId) , eq(books.isDeleted,false)]);
   }
 
   async updateBook(
-    bookId: string,
+    bookId: number,
     newBookData: Partial<InferSelectModel<typeof books>>
   ) {
     const [updatedBook] =  await db.update(books).set(newBookData).where(eq(books.id, bookId)).returning();
     return updatedBook
   }
 
-  async deleteBook(bookId: string) {
+  async deleteBook(bookId: number) {
     await db
       .update(books)
       .set({ isDeleted: true })
       .where(eq(books.id, bookId));
   }
-  async restoreBook(bookId: string) {
+  async restoreBook(bookId: number) {
     await db
       .update(books)
       .set({ isDeleted: false })

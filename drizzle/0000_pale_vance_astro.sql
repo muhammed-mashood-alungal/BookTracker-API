@@ -11,8 +11,10 @@ CREATE TABLE "books" (
 --> statement-breakpoint
 CREATE TABLE "notes" (
 	"id" serial PRIMARY KEY NOT NULL,
-	"book_id" serial NOT NULL,
+	"book_id" integer NOT NULL,
 	"content" text NOT NULL,
 	"created_at" timestamp DEFAULT now(),
 	"updated_at" timestamp DEFAULT now()
 );
+--> statement-breakpoint
+ALTER TABLE "notes" ADD CONSTRAINT "notes_book_id_books_id_fk" FOREIGN KEY ("book_id") REFERENCES "public"."books"("id") ON DELETE no action ON UPDATE no action;
