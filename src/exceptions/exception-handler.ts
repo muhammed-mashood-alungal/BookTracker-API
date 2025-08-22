@@ -4,7 +4,7 @@ import { HttpError } from "./http-exception";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import { ERROR_RESPONSE } from "../constants";
 
-export const errorHandler = ({ code, error, set }: any) => {
+export const errorHandler = ({ error, set }: any) => {
   console.log(error);
 
   if (error instanceof HttpError) {

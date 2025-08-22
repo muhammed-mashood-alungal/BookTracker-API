@@ -47,7 +47,6 @@ export class BookService {
     if (!book) {
       throw new HttpError(ERROR_RESPONSE.BOOK_NOT_FOUND, StatusCodes.NOT_FOUND);
     }
-    console.log(book);
     return book;
   }
 

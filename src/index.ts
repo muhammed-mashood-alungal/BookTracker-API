@@ -12,7 +12,7 @@ const app = new Elysia()
   .listen(env.PORT!);
 
 console.log(
-  `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`
+  `🦊 Elysia is running at - ${app.server?.hostname}:${app.server?.port}`
 );
 
 checkDbConnection();
