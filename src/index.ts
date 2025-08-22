@@ -1,8 +1,7 @@
 import { Elysia } from "elysia";
-import { checkDbConnection } from "./config/db.config";
-import dotenv from 'dotenv';
+import { checkDbConnection } from "./utils";
 
-dotenv.config();
+
 
 const app = new Elysia().get("/", () => "Hello Elysia").listen(3000);
 
