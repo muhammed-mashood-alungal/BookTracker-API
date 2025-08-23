@@ -15,8 +15,8 @@ To maintain simplicity and avoid over-engineering, I skipped implementing a sepa
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/booktracker-backend.git
-cd booktracker-backend
+git clone https://github.com/muhammed-mashood-alungal/BookTracker-API
+cd BookTracker-API
 ```
 ### 2. Install Dependencies
 ```bash
