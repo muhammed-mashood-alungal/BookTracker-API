@@ -1,4 +1,10 @@
-import { eq, ilike, InferInsertModel, InferSelectModel } from "drizzle-orm";
+import {
+  and,
+  eq,
+  ilike,
+  InferInsertModel,
+  InferSelectModel,
+} from "drizzle-orm";
 import { books } from "../models";
 import { IGetAllQuery } from "../types";
 import { findOneBy } from "../utils";
@@ -16,16 +22,17 @@ export class BookService {
   async getBooks({ limit, search, skip }: IGetAllQuery) {
     const searchTerm = search ? `%${search}%` : undefined;
 
-    let query = db
-      .select()
-      .from(books)
-      .where(eq(books.isDeleted, false))
-      .$dynamic();
+    let query = db.select().from(books).$dynamic();
+
+    const conditions = [eq(books.isDeleted, false)];
 
     if (searchTerm) {
-      query = query.where(ilike(books.title, searchTerm));
+      conditions.push(ilike(books.title, searchTerm));
     }
 
+    query = query.where(and(...conditions));
+
+    
     if (skip) {
       query = query.offset(Number(skip));
     }

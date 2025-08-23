@@ -11,6 +11,20 @@ export class NotesService {
     bookId: number,
     noteData: Omit<InferInsertModel<typeof notes>, "bookId">
   ) {
+    const doc = (await findOneBy(books, [eq(books.id, bookId)], {
+      isDeleted: books.isDeleted,
+    })) as typeof books;
+
+    if (!doc)
+      throw new HttpError(ERROR_RESPONSE.BOOK_NOT_FOUND, StatusCodes.NOT_FOUND);
+
+    if (doc.isDeleted) {
+      throw new HttpError(
+        ERROR_RESPONSE.BOOK_IS_NO_MORE_AVAILABLE,
+        StatusCodes.NOT_FOUND
+      );
+    }
+    
     return await db
       .insert(notes)
       .values({ ...noteData, bookId })
@@ -34,4 +48,4 @@ export class NotesService {
 
     return await db.select().from(notes).where(eq(notes.bookId, bookId));
   }
-} 
+}

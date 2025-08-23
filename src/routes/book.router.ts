@@ -55,7 +55,7 @@ export const bookApp = new Elysia({ prefix: "/books" })
     const { bookId } = bookIdParams.parse(params);
     const noteDetails = NoteCreateSchema.parse(body);
     const newNote = await noteService.createNoteforBook(bookId, noteDetails);
-    return successResponse(StatusCodes.OK, ReasonPhrases.OK, { newNote });
+    return successResponse(StatusCodes.CREATED, ReasonPhrases.OK, { newNote });
   })
 
   .get("/:bookId", async ({ params }) => {

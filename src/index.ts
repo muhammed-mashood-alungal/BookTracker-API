@@ -5,7 +5,7 @@ import { HttpError } from "./exceptions";
 import { env } from "./config";
 import { errorHandler } from "./exceptions";
 
-const app = new Elysia()
+const app = new Elysia({prefix : '/api/v1'})
   .error("HTTP_ERROR", HttpError)
   .onError(errorHandler)
   .use(bookApp)
