@@ -1,15 +1,39 @@
-# Elysia with Bun runtime
+# 📚 BookTracker API
 
-## Getting Started
-To get started with this template, simply paste this command into your terminal:
+This is the backend API for the **BookTracker** application. It allows users to manage books, including creating, reading, updating, and searching for books. The API is built using **Bun**, **Elysia**, and **Drizzle ORM**.
+
+---
+
+## 📝 Project Overview
+
+To maintain simplicity and avoid over-engineering, I skipped implementing a separate repository layer for this project. All business logic is handled cleanly in the **service layer**, and proper **error handling** has been implemented throughout the API.
+
+---
+
+## 📦 Setup Instructions
+
+### 1. Clone the Repository
+
 ```bash
-bun create elysia ./elysia-example
+git clone https://github.com/muhammed-mashood-alungal/BookTracker-API
+cd BookTracker-API
+```
+### 2. Install Dependencies
+```bash
+bun install
+```
+### 3. Configure Environment Variables
+```bash
+PORT=3000
+DB_CONNECTION_URL=postgres://user:password@localhost:5432/booktracker
+```
+### 4. Set Up the Database
+```bash
+bun drizzle-kit generate
+bun drizzle-kit migrate
 ```
 
-## Development
-To start the development server run:
+### 5. Run the server
 ```bash
-bun run dev
+bun run src/index.ts
 ```
-
-Open http://localhost:3000/ with your browser to see the result.
